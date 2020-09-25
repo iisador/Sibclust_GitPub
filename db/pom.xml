@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.gitpub</groupId>
+        <artifactId>ruspost</artifactId>
+        <version>0.0.1</version>
+    </parent>
+
+    <groupId>ru.gitpub.ruspost</groupId>
+    <artifactId>db</artifactId>
+    <packaging>jar</packaging>
+    <description>Модуль ведения изменений БД</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <configuration>
+                    <propertyFile>src/main/resources/liquibase.properties</propertyFile>
+                    <changeLogFile>ruspost_0_0_1.xml</changeLogFile>
+                    <outputChangeLogFile>ruspost_0_0_1_out.xml</outputChangeLogFile>
+                    <logging>DEBUG</logging>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
