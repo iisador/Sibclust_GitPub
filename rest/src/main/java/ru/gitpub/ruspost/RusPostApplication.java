@@ -1,4 +1,4 @@
-package ru.gitpub.ruspost.rest;
+package ru.gitpub.ruspost;
 
 import org.springframework.boot.Banner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

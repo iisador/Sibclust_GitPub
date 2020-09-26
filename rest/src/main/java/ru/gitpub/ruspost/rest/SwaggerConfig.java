@@ -42,7 +42,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
                 .build();
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage(""))
+                .apis(RequestHandlerSelectors.basePackage("ru.gitpub.ruspost.rest.controllers"))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo);

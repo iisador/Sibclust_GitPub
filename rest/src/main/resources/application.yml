@@ -9,3 +9,8 @@ server:
 spring:
   autoconfigure:
     exclude: org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
+  datasource:
+    username: sa
+    type: com.zaxxer.hikari.HikariDataSource
+    password:
+    url: jdbc:h2:file:./db

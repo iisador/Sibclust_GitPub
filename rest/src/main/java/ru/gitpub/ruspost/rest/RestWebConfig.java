@@ -19,6 +19,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.convert.converter.Converter;
@@ -31,6 +32,7 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import ru.gitpub.ruspost.domain.DomainConfig;
 import ru.gitpub.ruspost.rest.interceptors.MdcInterceptor;
 import ru.gitpub.ruspost.rest.interceptors.TimerInterceptor;
 import springfox.documentation.oas.annotations.EnableOpenApi;
@@ -41,7 +43,7 @@ import springfox.documentation.oas.annotations.EnableOpenApi;
 @Configuration
 @EnableWebMvc
 @EnableOpenApi
-@ComponentScan("ru.gitpub.ruspost.rest.resources.converters")
+//@ComponentScan("ru.gitpub.ruspost.rest.resources.converters")
 public class RestWebConfig implements WebMvcConfigurer {
 
     /** Паттерн для даты. */
