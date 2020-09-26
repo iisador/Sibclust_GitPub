@@ -32,7 +32,7 @@ public class DomainConfig {
 
         Properties properties = new Properties();
         properties.put("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-//        properties.put("hibernate.hbm2ddl.auto", "validate");
+        //        properties.put("hibernate.hbm2ddl.auto", "validate");
 
         entityManagerFactory.setJpaProperties(properties);
         return entityManagerFactory;

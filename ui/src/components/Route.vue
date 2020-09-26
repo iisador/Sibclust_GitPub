@@ -5,9 +5,13 @@
       <div style="display: flex; width: 100%">
         <v-col class="d-flex" cols="12" sm="5">
           <v-select
+              v-model="selectedItem.name"
               :items="zones"
+              item-text="name"
+              id="id"
               filled
               label="Откуда забрать?"
+              @change="getSelect(selectedItem.name)"
               dense
           ></v-select>
         </v-col>
@@ -272,7 +276,12 @@ export default {
   },
   data: () => ({
     items: JSON.parse(VueCookies.get("geoZones")),
+    selectedItem: {
+      id: '',
+      name: ''
+    },
     zones: [],
+    select: { state: 'Florida', abbr: 'FL' },
     fromAdresse: 'fromPost',
     toAdresse: 'toPost',
     show: false,
@@ -289,12 +298,13 @@ export default {
     time: null,
     time2: null,
     toTime: null,
+    toTime2: null,
     enabled: false,
     toEnabled: false
   }),
   created() {
     this.items.map(item => {
-      this.zones.push(item.name);
+      this.zones.push(item);
     })
   },
 
@@ -307,6 +317,11 @@ export default {
     },
     getToDateAndTime() {
       this.toEnabled = !this.toEnabled;
+    },
+    getSelect(id) {
+      const obj  = this.zones.filter(item=>item.name == id )[0]
+      this.selectedItem.id = obj.id
+      console.log(this.selectedItem.id)
     }
   }
 }
