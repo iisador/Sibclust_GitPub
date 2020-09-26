@@ -5,8 +5,7 @@
       <div style="display: flex; width: 100%">
         <v-col class="d-flex" cols="12" sm="5">
           <v-select
-              :items="items"
-              :id="id"
+              :items="zones"
               filled
               label="Откуда забрать?"
               dense
@@ -17,7 +16,7 @@
         </v-col>
         <v-col class="d-flex" cols="12" sm="5">
           <v-select
-              :items="items"
+              :items="zones"
               filled
               label="Куда доставить?"
               dense
@@ -260,10 +259,20 @@
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+import VueCookies from "vue-cookies";
+
 export default {
   name: "Route",
-  props: ['items', 'id'],
+  computed: {
+    ...mapGetters(['GET_GEOZONES']),
+    getGeoZones() {
+      return this.GET_GEOZONES
+    }
+  },
   data: () => ({
+    items: JSON.parse(VueCookies.get("geoZones")),
+    zones: [],
     fromAdresse: 'fromPost',
     toAdresse: 'toPost',
     show: false,
@@ -283,6 +292,15 @@ export default {
     enabled: false,
     toEnabled: false
   }),
+  created() {
+    this.items.map(item => {
+      this.zones.push(item.name);
+    })
+  },
+
+  mounted() {
+    this.$store.dispatch('GET_GEOZONES');
+  },
   methods: {
     getDateAndTime() {
       this.enabled = !this.enabled;

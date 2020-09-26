@@ -17,9 +17,9 @@
      <v-list shaped style="padding: 0">
        <v-list-item-group
            v-model="model"
-           style="display: flex; flex-direction: row"
+           style="display: flex; flex-direction: column"
        >
-         <template addItems="addItems">
+         <template v-for="(item, i) in suples">
            <v-divider
                v-if="!item"
                :key="`divider-${i}`"
@@ -29,15 +29,16 @@
                v-else
                :key="`item-${i}`"
                :value="item"
+               :items="item"
                active-class="deep-purple--text text--accent-4"
                style="border-right: 1px solid #C7C7C7 !important;"
            >
              <template v-slot:default="{ active }">
                <v-list-item-action>
-                 <v-radio
+                 <v-checkbox
                      :input-value="active"
                      color="deep-purple accent-4"
-                 ></v-radio>
+                 ></v-checkbox>
                </v-list-item-action>
                <v-list-item-content>
                  <v-list-item-title v-text="item"></v-list-item-title>
@@ -52,21 +53,13 @@
 </template>
 
 <script>
+import VueCookies from "vue-cookies";
 export default {
   name: "Additionals",
   props: ['addItems'],
   data: () => ({
-    // additionalsModel: {
-    //   lathing: '',
-    //   backDocs: '',
-    //   message: '',
-    //   assemblyOfGoods: '',
-    //   dismantling: '',
-    //   connection: '',
-    //   interval: '',
-    //   climbingToTheFloor: '',
-    //   cargoHandling: '',
-    // },
+    items: JSON.parse(VueCookies.get("supplementary")),
+    suples: [],
     additionals: false,
     additionalsText: 'Показать дополнительные услуги',
     additionalsTextHide: 'Скрыть дополнительные услуги',
@@ -76,10 +69,19 @@ export default {
     getAdditionals() {
       this.additionals = !this.additionals;
     }
+  },
+  created() {
+    this.items.map(item => {
+      this.suples.push(item.name);
+    })
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+.v-application--is-ltr .v-list.v-sheet--shaped .v-list-item, .v-application--is-ltr .v-list.v-sheet--shaped .v-list-item:before, .v-application--is-ltr .v-list.v-sheet--shaped .v-list-item>.v-ripple__container {
+  border: none !important;
+  border-bottom-right-radius: 0px!important;
+  border-top-right-radius: 0px!important;
+}
 </style>
