@@ -1,6 +1,6 @@
 package ru.gitpub.ruspost.rest.controllers;
 
-import java.util.List;
+import java.util.UUID;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,8 @@ public class ContractorController {
     }
 
     @GetMapping
-    public List<Contractor> list() {
-        return contractorRepository.findAll();
+    public Contractor list(String id) {
+        return contractorRepository.findById(UUID.fromString(id))
+                .orElseThrow(() -> new RuntimeException("No contractor"));
     }
 }
