@@ -39,4 +39,17 @@ public class Contractor implements Serializable {
     @OneToOne
     @JoinColumn(name = "ID")
     private Statistic statistic;
+
+    public ContrServ getService(UUID serviceType) {
+        return services.stream()
+                .filter(s -> s.getServiceType().getId().equals(serviceType))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public ContrServGeo getGeozone(UUID geozoneId) {
+        return geos.stream().filter(g -> g.getGeozone().getId().equals(geozoneId))
+                .findFirst()
+                .orElse(null);
+    }
 }
