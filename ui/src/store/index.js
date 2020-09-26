@@ -8,7 +8,8 @@ Vue.use(VueCookies)
 export default new Vuex.Store({
   state: {
     geoZones: '',
-    supplementary: ''
+    supplementary: '',
+    params: ''
   },
 
   mutations: {
@@ -19,7 +20,11 @@ export default new Vuex.Store({
     GET_SUPLEMENTARY(state, payload) {
       VueCookies.set('supplementary', JSON.stringify(payload.data))
       state.supplementary = payload
-    }
+    },
+    LOAD_PARAMS(state, payload) {
+      VueCookies.set('params', JSON.stringify(payload.data))
+      state.params = payload
+    },
   },
 
   actions: {
@@ -36,7 +41,10 @@ export default new Vuex.Store({
         .then(response => {
           commit('GET_SUPLEMENTARY',response)
         })
-    }
+    },
+    LOAD_PARAMS({commit}, payload) {
+      commit('LOAD_PARAMS', payload)
+    },
   },
 
   getters: {
