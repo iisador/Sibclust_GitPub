@@ -1,11 +1,20 @@
 package ru.gitpub.ruspost.services;
 
+import java.nio.ByteBuffer;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.stereotype.Service;
 import ru.gitpub.ruspost.domain.entities.Order;
+import ru.gitpub.ruspost.domain.repos.ContServRepository;
 import ru.gitpub.ruspost.domain.repos.ContrServGeoRepository;
 import ru.gitpub.ruspost.domain.repos.OrderRepository;
 import ru.gitpub.ruspost.rest.InputRequest;
@@ -22,12 +31,34 @@ public class ChainService {
 
     private static final UUID LAST_MILE = UUID.fromString("d4ca479d-ec3d-4d15-9fda-4a826cb2ef57");
 
+    private static final RowMapper<Pair> PAIR_ROW_MAPPER = new RowMapper<Pair>() {
+        public UUID getGuidFromByteArray(byte[] bytes) {
+            ByteBuffer bb = ByteBuffer.wrap(bytes);
+            long high = bb.getLong();
+            long low = bb.getLong();
+            return new UUID(high, low);
+        }
+
+        @Override
+        public Pair mapRow(ResultSet resultSet, int i) throws SQLException {
+            UUID service = getGuidFromByteArray((byte[]) resultSet.getObject("service"));
+            UUID geo = getGuidFromByteArray((byte[]) resultSet.getObject("geozone"));
+            return new Pair(service, geo);
+        }
+    };
+
+    private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
     private final ContrServGeoRepository contrServGeoRepository;
+
+    private final ContServRepository contServRepository;
 
     private final OrderRepository orderRepository;
 
-    public ChainService(ContrServGeoRepository contrServGeoRepository, OrderRepository orderRepository) {
+    public ChainService(NamedParameterJdbcOperations namedParameterJdbcOperations, ContrServGeoRepository contrServGeoRepository, ContServRepository contServRepository, OrderRepository orderRepository) {
+        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
         this.contrServGeoRepository = contrServGeoRepository;
+        this.contServRepository = contServRepository;
         this.orderRepository = orderRepository;
     }
 
@@ -37,15 +68,9 @@ public class ChainService {
         List<UUID> suppls = inputRequest.getSupplementaries().stream()
                 .map(UUID::fromString)
                 .collect(toList());
-        Order first = contrServGeoRepository.getFirstContractor(fromGeozone, suppls)
-                .map(Order::new)
-                .orElseThrow(() -> new RuntimeException("Поставщик не найден"));
-        Order ff = contrServGeoRepository.getFfCenter(Arrays.asList(fromGeozone, toGeozone))
-                .map(Order::new)
-                .orElseThrow(() -> new RuntimeException("ФФ не найден"));
-        Order last = contrServGeoRepository.getLastContractor(toGeozone, suppls)
-                .map(Order::new)
-                .orElseThrow(() -> new RuntimeException("ФФ не найден"));
+        Order first = getOrder(Collections.singletonList(fromGeozone), FIRST_MILE, suppls);
+        Order ff = getOrder(Arrays.asList(fromGeozone, toGeozone), FF, Collections.emptyList());
+        Order last = getOrder(Collections.singletonList(toGeozone), LAST_MILE, Collections.emptyList());
         first.setChild(ff);
         ff.setParent(first);
 
@@ -54,18 +79,72 @@ public class ChainService {
 
         first = orderRepository.save(first);
 
-        return Arrays.asList(toResource(first, FIRST_MILE),
-                toResource(ff, FF),
-                toResource(last, LAST_MILE));
+        return Arrays.asList(toResource(first),
+                toResource(ff),
+                toResource(last));
     }
 
-    private OrderResource toResource(Order o, UUID type) {
+    private Order getOrder(List<UUID> geozones, UUID type, List<UUID> suppls) {
+        Pair pair;
+
+        if (suppls.isEmpty()) {
+            SqlParameterSource params = new MapSqlParameterSource("type", type)
+                    .addValue("geozones", geozones);
+            String query = "select cg.id as geozone, cserv.id as service from CONTRACTOR c,\n" +
+                           "                 CONTR_SERV_GEO cg,\n" +
+                           "                 CONTR_SERV_SUPPL csup,\n" +
+                           "                 CONTR_SERV cserv\n" +
+                           "where 1 = 1\n" +
+                           "  AND c.ID = cg.CONTRAGENTID\n" +
+                           "  AND cserv.CONTRACTORID = c.ID\n" +
+                           "  AND csup.CONTRSERVID = cserv.ID\n" +
+                           "  AND cserv.SERVICETYPEID = :type\n" +
+                           "  AND cg.GEOZONEID in(:geozones)\n" +
+                           "  ORDER BY cg.PRICE asc\n" +
+                           "LIMIT 1";
+            pair = namedParameterJdbcOperations.queryForObject(query, params, PAIR_ROW_MAPPER);
+        } else {
+            SqlParameterSource params = new MapSqlParameterSource("type", type)
+                    .addValue("geozones", geozones)
+                    .addValue("suppls", suppls);
+            String query = "select cg.id as geozone, cserv.id as service from CONTRACTOR c,\n" +
+                           "                 CONTR_SERV_GEO cg,\n" +
+                           "                 CONTR_SERV_SUPPL csup,\n" +
+                           "                 CONTR_SERV cserv\n" +
+                           "where 1 = 1\n" +
+                           "  AND c.ID = cg.CONTRAGENTID\n" +
+                           "  AND cserv.CONTRACTORID = c.ID\n" +
+                           "  AND csup.CONTRSERVID = cserv.ID\n" +
+                           "  AND cserv.SERVICETYPEID = :type\n" +
+                           "  AND cg.GEOZONEID in(:geozones)\n" +
+                           "  AND csup.SUPPLEMENTARYID in(:suppls)\n" +
+                           "  ORDER BY cg.PRICE asc\n" +
+                           "LIMIT 1";
+            pair = namedParameterJdbcOperations.queryForObject(query, params, PAIR_ROW_MAPPER);
+        }
+
+        return new Order(contrServGeoRepository.findById(pair.geo).orElseThrow(RuntimeException::new),
+                contServRepository.findById(pair.service).orElseThrow(RuntimeException::new));
+    }
+
+    private OrderResource toResource(Order o) {
         OrderResource r = new OrderResource();
         r.setId(o.getId());
-        //        r.setGeozoneId();
+        r.setGeozoneId(o.getContrServGeo().getGeozone().getName());
         r.setName(o.getContrServGeo().getContractor().getName());
-        //        r.setServiceType(type);
+        r.setServiceType(o.getService().getServiceType().getName());
         r.setSum(o.getContrServGeo().getPrice());
         return r;
+    }
+
+    private static class Pair {
+        UUID geo;
+
+        UUID service;
+
+        Pair(UUID service, UUID geo) {
+            this.service = service;
+            this.geo = geo;
+        }
     }
 }

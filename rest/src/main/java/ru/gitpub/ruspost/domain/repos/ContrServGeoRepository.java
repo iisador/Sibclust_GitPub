@@ -12,6 +12,7 @@ import ru.gitpub.ruspost.domain.entities.ContrServGeo;
 
 @Repository
 public interface ContrServGeoRepository extends JpaRepository<ContrServGeo, UUID> {
+
     @Query(value = "select cg.* from CONTRACTOR c,\n" +
                    "     CONTR_SERV_GEO cg,\n" +
                    "     CONTR_SERV_SUPPL csup,\n" +

@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 
@@ -41,7 +43,7 @@ public class DomainConfig {
     }
 
     @Bean
-    public JdbcOperations jdbcOperations(DataSource dataSource) {
-        return new JdbcTemplate(dataSource);
+    public NamedParameterJdbcOperations namedParameterJdbcOperations(DataSource dataSource) {
+        return new NamedParameterJdbcTemplate(dataSource);
     }
 }
