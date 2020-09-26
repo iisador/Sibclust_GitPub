@@ -10,11 +10,11 @@ import ru.gitpub.ruspost.domain.repos.ContractorRepository;
 
 @RestController
 @RequestMapping("/rest/contractor")
-public class ContracorController {
+public class ContractorController {
 
     private final ContractorRepository contractorRepository;
 
-    public ContracorController(ContractorRepository contractorRepository) {
+    public ContractorController(ContractorRepository contractorRepository) {
         this.contractorRepository = contractorRepository;
     }
 

@@ -18,7 +18,7 @@ public class ContrServ implements Serializable {
 
     /** ID. **/
     @Id
-    private Long id;
+    private UUID id;
 
     /** ID поставщика. **/
     private UUID contractorId;
