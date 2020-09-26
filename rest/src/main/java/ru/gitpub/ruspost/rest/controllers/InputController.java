@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.gitpub.ruspost.domain.entities.Order;
 import ru.gitpub.ruspost.rest.InputRequest;
+import ru.gitpub.ruspost.rest.resources.OrderResource;
 import ru.gitpub.ruspost.services.ChainService;
 
 /** Тестовый контроллер. **/
@@ -27,7 +28,7 @@ public class InputController {
      * @return Hello!
      **/
     @PostMapping
-    public List<Order> calcChain(@RequestBody InputRequest inputRequest) {
+    public List<OrderResource> calcChain(@RequestBody InputRequest inputRequest) {
         return chainService.calcChain(inputRequest);
     }
 }
