@@ -1,16 +1,11 @@
 package ru.gitpub.ruspost.domain.entities;
 
-import java.io.Serializable;
-import java.util.UUID;
-import javax.persistence.Embeddable;
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.UUID;
 
 /** Привязка услуги поставщика к геозоне. **/
 @Getter
@@ -20,11 +15,11 @@ import lombok.Setter;
 public class ContrServGeo implements Serializable {
 
     /** Составной ключ. **/
-    @EmbeddedId
-    private ContrServGeoID id;
+    @Id
+    private UUID id;
 
     @ManyToOne
-    @JoinColumn(name = "CONTRSERVID")
+    @JoinColumn(name = "CONTRAGENTID")
     private Contractor contractor;
 
     @ManyToOne
@@ -42,17 +37,4 @@ public class ContrServGeo implements Serializable {
 
     /** Услуга доступна по. **/
     private String providedTo;
-
-    /** Составной ключ для сущности. **/
-    @Getter
-    @Setter
-    @Embeddable
-    public static class ContrServGeoID implements Serializable {
-
-        /** ID услуги поставщика. **/
-        private UUID contrServId;
-
-        /** ID геозоны. **/
-        private UUID geozoneId;
-    }
 }
