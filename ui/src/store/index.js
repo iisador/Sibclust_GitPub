@@ -1,7 +1,9 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import VueCookies from "vue-cookies";
 
 Vue.use(Vuex)
+Vue.use(VueCookies)
 
 export default new Vuex.Store({
   state: {
@@ -11,9 +13,11 @@ export default new Vuex.Store({
 
   mutations: {
     GET_GEOZONES(state, payload) {
+      VueCookies.set('geoZones', JSON.stringify(payload.data))
       state.geoZones = payload
     },
     GET_SUPLEMENTARY(state, payload) {
+      VueCookies.set('supplementary', JSON.stringify(payload.data))
       state.supplementary = payload
     }
   },
@@ -21,14 +25,14 @@ export default new Vuex.Store({
   actions: {
     GET_GEOZONES: async ({commit}) => {
       await axios
-        .get('/rest/geozones')
+        .get('http://localhost:9000/rest/geozones')
         .then(response => {
           commit('GET_GEOZONES',response)
         })
     },
     GET_SUPLEMENTARY: async ({commit}) => {
       await axios
-        .get('/rest/supplementary')
+        .get('http://localhost:9000/rest/supplementary')
         .then(response => {
           commit('GET_SUPLEMENTARY',response)
         })
