@@ -46,4 +46,9 @@ public class DomainConfig {
     public NamedParameterJdbcOperations namedParameterJdbcOperations(DataSource dataSource) {
         return new NamedParameterJdbcTemplate(dataSource);
     }
+
+    @Bean
+    public JdbcOperations jdbcOperations(DataSource dataSource) {
+        return new JdbcTemplate(dataSource);
+    }
 }

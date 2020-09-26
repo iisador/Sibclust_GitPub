@@ -56,15 +56,15 @@ public class Order implements Serializable {
     /** Время выполнения услуги по. **/
     private LocalDateTime dateTo;
 
+    @Transient
+    private Double rating;
+
     public Order() {
     }
 
-    public Order(ContrServGeo contrServGeo, ContrServ service) {
+    public Order(ContrServGeo contrServGeo, ContrServ service, Double rating) {
         this.contrServGeo = contrServGeo;
         this.service = service;
-    }
-
-    public Order(ContrServGeo contrServGeo) {
-        this.contrServGeo = contrServGeo;
+        this.rating = rating;
     }
 }

@@ -19,4 +19,6 @@ public class OrderResource {
     private String serviceType;
 
     private Long sum;
+
+    private Double rating;
 }

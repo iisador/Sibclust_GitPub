@@ -12,7 +12,7 @@ drop table if exists SUPPLEMENTARY CASCADE;
 create table CONTR_SERV (id binary not null, contractorId binary, name varchar(255), serviceTypeId binary, weightMax bigint, weightMin bigint, primary key (id));
 create table CONTR_SERV_GEO (id binary not null, contragentid binary not null, geozoneId binary not null, avgExecTime bigint, price bigint, providedFrom varchar(255), providedTo varchar(255), primary key (id));
 create table CONTR_SERV_SUPPL (contrServId binary not null, supplementaryId binary not null, price bigint, primary key (contrServId, supplementaryId));
-create table CONTRACTOR (id binary not null, name varchar(255), primary key (id));
+create table CONTRACTOR (id binary not null, name varchar(255), indexPrice double, indexTime double, rating double, primary key (id));
 create table STAT (id binary not null, assignedOverall bigint, completed bigint, cancelled bigint, clientCancelled bigint, failed bigint);
 create table GEOZONE (id binary not null, name varchar(255), primary key (id));
 create table ORDERS (id binary not null, childId binary, contrservgeoid binary, contrservid binary, dateFrom timestamp, dateTo timestamp, parentId binary, weight bigint, primary key (id));

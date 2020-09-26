@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
@@ -32,24 +33,17 @@ public class Contractor implements Serializable {
     @JoinColumn(name = "CONTRACTORID")
     private List<ContrServ> services = new ArrayList<>();
 
-    @OneToMany
-    @JoinColumn(name = "CONTRSERVID")
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CONTRAGENTID")
     private List<ContrServGeo> geos = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID")
     private Statistic statistic;
 
-    public ContrServ getService(UUID serviceType) {
-        return services.stream()
-                .filter(s -> s.getServiceType().getId().equals(serviceType))
-                .findFirst()
-                .orElse(null);
-    }
+    private Double indexPrice;
 
-    public ContrServGeo getGeozone(UUID geozoneId) {
-        return geos.stream().filter(g -> g.getGeozone().getId().equals(geozoneId))
-                .findFirst()
-                .orElse(null);
-    }
+    private Double indexTime;
+
+    private Double rating;
 }
