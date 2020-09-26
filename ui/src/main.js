@@ -3,11 +3,13 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Vuetify from 'vuetify'
+import moment from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
 window.axios = require('axios')
 
 Vue.use(Vuetify)
+Vue.use(moment);
 
 const opts = {}
 
