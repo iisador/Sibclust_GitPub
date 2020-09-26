@@ -8,12 +8,15 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 public class OrderResource {
 
     private UUID id;
 
+    private String geozoneId;
+
     private String name;
+
+    private String serviceType;
 
     private Long sum;
 }

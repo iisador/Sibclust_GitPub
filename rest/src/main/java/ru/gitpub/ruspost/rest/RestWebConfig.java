@@ -17,9 +17,7 @@ import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.support.ConversionServiceFactoryBean;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.convert.converter.Converter;
@@ -31,8 +29,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import ru.gitpub.ruspost.domain.DomainConfig;
 import ru.gitpub.ruspost.rest.interceptors.MdcInterceptor;
 import ru.gitpub.ruspost.rest.interceptors.TimerInterceptor;
 import springfox.documentation.oas.annotations.EnableOpenApi;
@@ -66,6 +64,12 @@ public class RestWebConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(mdcInterceptor()).addPathPatterns("/rest/**").order(0);
         registry.addInterceptor(timerInterceptor()).addPathPatterns("/rest/**").order(1);
+    }
+
+    /** Тут отдаем статику для фронта. **/
+    @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/Sibclust_GitPub/**")
+                .addResourceLocations("classpath:ui/");
     }
 
     /**

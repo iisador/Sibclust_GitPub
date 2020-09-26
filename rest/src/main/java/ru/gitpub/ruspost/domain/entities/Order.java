@@ -1,19 +1,13 @@
 package ru.gitpub.ruspost.domain.entities;
 
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.UUID;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 import static javax.persistence.CascadeType.ALL;
 
@@ -46,11 +40,12 @@ public class Order implements Serializable {
 
     /** Привязка к конкретной услуге конкретного поставщика. **/
     @OneToOne(cascade = ALL)
-    @JoinColumns({
-            @JoinColumn(name = "GEOZONEID"),
-            @JoinColumn(name = "CONTRSERVID")
-    })
+    @JoinColumn(name = "CONTRSERVGEOID")
     private ContrServGeo contrServGeo;
+    
+    @OneToOne
+    @JoinColumn(name = "CONTRSERVID")
+    private ContrServ service;
 
     /** Вес посылки. **/
     private Long weight;
@@ -62,6 +57,11 @@ public class Order implements Serializable {
     private LocalDateTime dateTo;
 
     public Order() {
+    }
+
+    public Order(ContrServGeo contrServGeo, ContrServ service) {
+        this.contrServGeo = contrServGeo;
+        this.service = service;
     }
 
     public Order(ContrServGeo contrServGeo) {

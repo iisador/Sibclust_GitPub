@@ -16,6 +16,12 @@ import static java.util.stream.Collectors.toList;
 @Service
 public class ChainService {
 
+    private static final UUID FIRST_MILE = UUID.fromString("9c43245d-7989-4e05-bdb1-cac99bc44155");
+
+    private static final UUID FF = UUID.fromString("a4379f8c-ca3b-402d-b192-d78fac8f815f");
+
+    private static final UUID LAST_MILE = UUID.fromString("d4ca479d-ec3d-4d15-9fda-4a826cb2ef57");
+
     private final ContrServGeoRepository contrServGeoRepository;
 
     private final OrderRepository orderRepository;
@@ -48,8 +54,18 @@ public class ChainService {
 
         first = orderRepository.save(first);
 
-        return Arrays.asList(first, ff, last).stream()
-                .map(o -> new OrderResource(o.getId(), o.getContrServGeo().getContractor().getName(), o.getContrServGeo().getPrice()))
-                .collect(toList());
+        return Arrays.asList(toResource(first, FIRST_MILE),
+                toResource(ff, FF),
+                toResource(last, LAST_MILE));
+    }
+
+    private OrderResource toResource(Order o, UUID type) {
+        OrderResource r = new OrderResource();
+        r.setId(o.getId());
+        //        r.setGeozoneId();
+        r.setName(o.getContrServGeo().getContractor().getName());
+        //        r.setServiceType(type);
+        r.setSum(o.getContrServGeo().getPrice());
+        return r;
     }
 }
