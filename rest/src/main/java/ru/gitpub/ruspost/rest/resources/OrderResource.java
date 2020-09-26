@@ -21,4 +21,6 @@ public class OrderResource {
     private Long sum;
 
     private Double rating;
+
+    private Long time;
 }

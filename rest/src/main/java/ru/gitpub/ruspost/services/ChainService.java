@@ -8,6 +8,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
@@ -18,6 +19,7 @@ import ru.gitpub.ruspost.domain.repos.ContServRepository;
 import ru.gitpub.ruspost.domain.repos.ContrServGeoRepository;
 import ru.gitpub.ruspost.domain.repos.OrderRepository;
 import ru.gitpub.ruspost.rest.InputRequest;
+import ru.gitpub.ruspost.rest.resources.ChainResource;
 import ru.gitpub.ruspost.rest.resources.OrderResource;
 
 import static java.util.stream.Collectors.toList;
@@ -48,7 +50,9 @@ public class ChainService {
         public Pair mapRow(ResultSet resultSet, int i) throws SQLException {
             UUID service = getGuidFromByteArray((byte[]) resultSet.getObject("service"));
             UUID geo = getGuidFromByteArray((byte[]) resultSet.getObject("geozone"));
-            return new Pair(service, geo, resultSet.getDouble("rating"));
+            Double rate = resultSet.getDouble("rating");
+            Long time = resultSet.getLong("time");
+            return new Pair(geo, service, rate, time);
         }
     };
 
@@ -67,7 +71,7 @@ public class ChainService {
         this.orderRepository = orderRepository;
     }
 
-    public List<OrderResource> calcChain(InputRequest inputRequest) {
+    public ChainResource calcChain(InputRequest inputRequest) {
         UUID fromGeozone = UUID.fromString(inputRequest.getFromGeozone());
         UUID toGeozone = UUID.fromString(inputRequest.getToGeozone());
         List<UUID> suppls = inputRequest.getSupplementaries().stream()
@@ -84,9 +88,9 @@ public class ChainService {
 
         first = orderRepository.save(first);
 
-        return Arrays.asList(toResource(first),
+        return new ChainResource(Arrays.asList(toResource(first),
                 toResource(ff),
-                toResource(last));
+                toResource(last)));
     }
 
     private Order getOrder(List<UUID> geozones, UUID type, double[] rates, List<UUID> suppls) {
@@ -98,7 +102,7 @@ public class ChainService {
                     .addValue("mRate", rates[0])
                     .addValue("mPrice", rates[1])
                     .addValue("mTime", rates[2]);
-            String query = "select cg.id as geozone, cserv.id as service, ((c.RATING * :mRate) + (c.INDEXPRICE * :mPrice) + (c.INDEXTIME * :mTime)) as rating from CONTRACTOR c,\n" +
+            String query = "select cg.id as geozone, cserv.id as service, cg.AVGEXECTIME as time, ((c.RATING * :mRate) + (c.INDEXPRICE * :mPrice) + (c.INDEXTIME * :mTime)) as rating from CONTRACTOR c,\n" +
                            "                 CONTR_SERV_GEO cg,\n" +
                            "                 CONTR_SERV_SUPPL csup,\n" +
                            "                 CONTR_SERV cserv\n" +
@@ -109,7 +113,7 @@ public class ChainService {
                            "  AND cserv.SERVICETYPEID = :type\n" +
                            "  AND cg.GEOZONEID in(:geozones)\n" +
                            "  ORDER BY rating desc\n" +
-                           "LIMIT 1";
+                           "  LIMIT 1";
             pair = namedParameterJdbcOperations.queryForObject(query, params, PAIR_ROW_MAPPER);
         } else {
             SqlParameterSource params = new MapSqlParameterSource("type", type)
@@ -118,7 +122,7 @@ public class ChainService {
                     .addValue("mRate", rates[0])
                     .addValue("mPrice", rates[1])
                     .addValue("mTime", rates[2]);
-            String query = "select cg.id as geozone, cserv.id as service, ((c.RATING * :mRate) + (c.INDEXPRICE * :mPrice) + (c.INDEXTIME * :mTime)) as rating from CONTRACTOR c,\n" +
+            String query = "select cg.id as geozone, cserv.id as service, cg.AVGEXECTIME as time, ((c.RATING * :mRate) + (c.INDEXPRICE * :mPrice) + (c.INDEXTIME * :mTime)) as rating from CONTRACTOR c,\n" +
                            "                 CONTR_SERV_GEO cg,\n" +
                            "                 CONTR_SERV_SUPPL csup,\n" +
                            "                 CONTR_SERV cserv\n" +
@@ -130,12 +134,12 @@ public class ChainService {
                            "  AND cg.GEOZONEID in(:geozones)\n" +
                            "  AND csup.SUPPLEMENTARYID in(:suppls)\n" +
                            "  ORDER BY rating desc\n" +
-                           "LIMIT 1";
+                           "  LIMIT 1";
             pair = namedParameterJdbcOperations.queryForObject(query, params, PAIR_ROW_MAPPER);
         }
 
         return new Order(contrServGeoRepository.findById(pair.geo).orElseThrow(RuntimeException::new),
-                contServRepository.findById(pair.service).orElseThrow(RuntimeException::new), pair.rate);
+                contServRepository.findById(pair.service).orElseThrow(RuntimeException::new), pair.rate, pair.time);
     }
 
     private OrderResource toResource(Order o) {
@@ -146,9 +150,11 @@ public class ChainService {
         r.setServiceType(o.getService().getServiceType().getName());
         r.setSum(o.getContrServGeo().getPrice());
         r.setRating(o.getRating());
+        r.setTime(o.getTime());
         return r;
     }
 
+    @AllArgsConstructor
     private static class Pair {
         UUID geo;
 
@@ -156,10 +162,6 @@ public class ChainService {
 
         Double rate;
 
-        Pair(UUID service, UUID geo, Double rate) {
-            this.service = service;
-            this.geo = geo;
-            this.rate = rate;
-        }
+        Long time;
     }
 }

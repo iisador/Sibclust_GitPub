@@ -59,12 +59,16 @@ public class Order implements Serializable {
     @Transient
     private Double rating;
 
+    @Transient
+    private Long time;
+
     public Order() {
     }
 
-    public Order(ContrServGeo contrServGeo, ContrServ service, Double rating) {
+    public Order(ContrServGeo contrServGeo, ContrServ service, Double rating, Long time) {
         this.contrServGeo = contrServGeo;
         this.service = service;
         this.rating = rating;
+        this.time = time;
     }
 }
