@@ -13,7 +13,12 @@
       <Gabarits />
       <Checkpoints />
       <Speed />
-      <Additionals />
+      <Additionals
+        v-for="(sup, index) in getSuplementary"
+        :addItems="sup.name"
+        :key="sup.id"
+        :id="sup.id"
+      />
       <Buttons />
     </v-app>
   </div>
@@ -41,14 +46,18 @@
     },
 
     computed: {
-      ...mapGetters(['GET_GEOZONES']),
+      ...mapGetters(['GET_GEOZONES', 'GET_SUPLEMENTARY']),
       getGeoZones() {
         return this.GET_GEOZONES
+      },
+      getSuplementary() {
+        return this.GET_SUPLEMENTARY
       }
     },
 
     mounted() {
       this.$store.dispatch('GET_GEOZONES');
+      this.$store.dispatch('GET_SUPLEMENTARY');
     },
   }
 </script>
