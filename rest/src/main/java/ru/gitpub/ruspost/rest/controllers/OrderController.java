@@ -73,6 +73,7 @@ public class OrderController {
         }
 
         order.setContrServGeo(contrServGeo);
+        orderRepository.save(order);
 
         return ResponseEntity.ok(order);
     }
@@ -115,6 +116,7 @@ public class OrderController {
         }
 
         order.setService(contrServ);
+        orderRepository.save(order);
 
         return ResponseEntity.ok(order);
     }
