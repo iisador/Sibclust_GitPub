@@ -1,6 +1,7 @@
 package ru.gitpub.ruspost.rest;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -20,4 +21,7 @@ public class InputRequest {
 
     @ApiModelProperty(value = "Дата", example = "26.09.2020")
     private LocalDate fromDtm;
+
+    @ApiModelProperty(value = "Список доп услуг")
+    private List<String> supplementaries;
 }
