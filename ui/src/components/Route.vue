@@ -11,7 +11,7 @@
               id="id"
               filled
               label="Откуда забрать?"
-              @change="getSelect(selectedItem.name)"
+              @change="getSelectFrom(selectedItem.name)"
               dense
           ></v-select>
         </v-col>
@@ -20,9 +20,13 @@
         </v-col>
         <v-col class="d-flex" cols="12" sm="5">
           <v-select
-              :items="zones"
+              v-model="selectedItemTo.name"
+              :items="zonesTo"
+              item-text="name"
+              id="id"
               filled
               label="Куда доставить?"
+              @change="getSelectTo(selectedItemTo.name)"
               dense
           ></v-select>
         </v-col>
@@ -57,6 +61,7 @@
                   >
                     <v-text-field
                         v-model="date"
+                        :getDateParam="getDateParam"
                         readonly
                         v-bind="attrs"
                         v-on="on"
@@ -67,7 +72,7 @@
                 <v-date-picker v-model="date" no-title scrollable>
                   <v-spacer></v-spacer>
                   <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                  <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                  <v-btn text color="primary" @click="$refs.menu.save(date), getFromDate()">OK</v-btn>
                 </v-date-picker>
               </v-menu>
               <v-menu
@@ -265,6 +270,7 @@
 <script>
 import {mapGetters} from "vuex";
 import VueCookies from "vue-cookies";
+import moment from 'moment'
 
 export default {
   name: "Route",
@@ -276,11 +282,17 @@ export default {
   },
   data: () => ({
     items: JSON.parse(VueCookies.get("geoZones")),
+    itemsTo: JSON.parse(VueCookies.get("geoZones")),
     selectedItem: {
       id: '',
       name: ''
     },
+    selectedItemTo: {
+      id: '',
+      name: ''
+    },
     zones: [],
+    zonesTo: [],
     select: { state: 'Florida', abbr: 'FL' },
     fromAdresse: 'fromPost',
     toAdresse: 'toPost',
@@ -300,11 +312,15 @@ export default {
     toTime: null,
     toTime2: null,
     enabled: false,
-    toEnabled: false
+    toEnabled: false,
+    getDateParam: null
   }),
   created() {
     this.items.map(item => {
       this.zones.push(item);
+    })
+    this.itemsTo.map(item => {
+      this.zonesTo.push(item);
     })
   },
 
@@ -318,10 +334,23 @@ export default {
     getToDateAndTime() {
       this.toEnabled = !this.toEnabled;
     },
-    getSelect(id) {
+    getSelectFrom(id) {
       const obj  = this.zones.filter(item=>item.name == id )[0]
+      // const objTo  = this.zonesTo.filter(item=>item.name == id )[0]
+      // console.log(objTo)
       this.selectedItem.id = obj.id
-      console.log(this.selectedItem.id)
+      // this.selectedItemTo.id = objTo.id
+      this.$emit('fromGeozoneId', this.selectedItem.id)
+      // this.$emit('toGeozoneId', this.selectedItemTo.id)
+    },
+    getSelectTo(id) {
+      const objTo  = this.zonesTo.filter(item=>item.name == id )[0]
+      this.selectedItemTo.id = objTo.id
+      this.$emit('toGeozoneId', this.selectedItemTo.id)
+    },
+    getFromDate() {
+      this.getDateParam = moment(this.date).format('DD.MM.YYYY');
+      this.$emit('getDateParam', this.getDateParam)
     }
   }
 }

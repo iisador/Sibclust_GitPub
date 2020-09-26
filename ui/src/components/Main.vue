@@ -4,12 +4,18 @@
       <h1>Подбор исполнителей</h1>
       <span>Заполните все поля для рассчёта оптимального маршрута и подбора подходящих исполнителей</span>
       <ButtonToggle />
-      <Route />
+      <Route
+          @getDateParam='onGetDateParam'
+          @fromGeozoneId="onFromGeozoneId"
+          @toGeozoneId="onToGeozoneId"
+      />
       <Gabarits />
       <Checkpoints />
       <Speed />
-      <Additionals />
-      <Buttons />
+      <Additionals
+        @supplementaries="onSupplementaries"
+      />
+      <Buttons :setSupply="setSupply"/>
     </v-app>
   </div>
 </template>
@@ -34,17 +40,44 @@
       Additionals,
       Buttons
     },
-
     computed: {
-      ...mapGetters(['GET_SUPLEMENTARY']),
-      getSuplementary() {
-        return this.GET_SUPLEMENTARY
+      getDateParam() {
+        console.log(this)
       }
     },
-
-    mounted() {
-      this.$store.dispatch('GET_SUPLEMENTARY');
+    data() {
+      return {
+        params: {
+          fromDtm: '',
+          fromGeozone: '',
+          toGeozone: '',
+          supplementaries: ''
+        },
+      }
     },
+    methods: {
+      setSupply() {
+        // this.$router.push('/all').catch(()=>{})
+        axios
+            .post('http://localhost:9000/rest/getChain', this.params)
+            .catch(error => {
+              console.log(error.response)
+            });
+        console.log(this.params)
+      },
+      onGetDateParam(data) {
+        this.params.fromDtm = data
+      },
+      onFromGeozoneId(data) {
+        this.params.fromGeozone = data
+      },
+      onToGeozoneId(data) {
+        this.params.toGeozone = data
+      },
+      onSupplementaries(data) {
+        this.params.supplementaries = data
+      }
+    }
   }
 </script>
 

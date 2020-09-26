@@ -19,11 +19,7 @@
 <script>
 export default {
   name: "Buttons",
-  methods: {
-    setSupply() {
-      this.$router.push('/all').catch(()=>{})
-    }
-  }
+  props: ['setSupply'],
 }
 </script>
 

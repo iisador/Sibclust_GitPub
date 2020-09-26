@@ -17,6 +17,7 @@
      <v-list shaped style="padding: 0">
        <v-list-item-group
            v-model="model"
+           multiple
            style="display: flex; flex-direction: column"
        >
          <template v-for="(item, i) in suples">
@@ -30,6 +31,7 @@
                :key="`item-${i}`"
                :value="item"
                :items="item"
+               @click="getSelect(item.id)"
                active-class="deep-purple--text text--accent-4"
                style="border-right: 1px solid #C7C7C7 !important;"
            >
@@ -41,7 +43,7 @@
                  ></v-checkbox>
                </v-list-item-action>
                <v-list-item-content>
-                 <v-list-item-title v-text="item"></v-list-item-title>
+                 <v-list-item-title v-text="item.name"></v-list-item-title>
                </v-list-item-content>
              </template>
            </v-list-item>
@@ -54,6 +56,7 @@
 
 <script>
 import VueCookies from "vue-cookies";
+import {mapGetters} from "vuex";
 export default {
   name: "Additionals",
   props: ['addItems'],
@@ -64,17 +67,26 @@ export default {
     additionalsText: 'Показать дополнительные услуги',
     additionalsTextHide: 'Скрыть дополнительные услуги',
     model: [],
+    supplementaries: []
   }),
+  created() {
+    this.items.map(item => {
+      this.suples.push(item);
+    })
+  },
+  mounted() {
+    this.$store.dispatch('GET_SUPLEMENTARY');
+  },
   methods: {
     getAdditionals() {
       this.additionals = !this.additionals;
+    },
+    getSelect(item) {
+      // const obj  = this.items.filter(item => item.name == id )
+      this.supplementaries.push(item)
+      this.$emit('supplementaries', this.supplementaries)
     }
   },
-  created() {
-    this.items.map(item => {
-      this.suples.push(item.name);
-    })
-  }
 }
 </script>
 
