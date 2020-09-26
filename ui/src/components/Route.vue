@@ -6,6 +6,7 @@
         <v-col class="d-flex" cols="12" sm="5">
           <v-select
               :items="items"
+              :id="id"
               filled
               label="Откуда забрать?"
               dense
@@ -261,8 +262,8 @@
 <script>
 export default {
   name: "Route",
+  props: ['items', 'id'],
   data: () => ({
-    items: ['Москва', 'Казань', 'Томск', 'Владивосток'],
     fromAdresse: 'fromPost',
     toAdresse: 'toPost',
     show: false,
