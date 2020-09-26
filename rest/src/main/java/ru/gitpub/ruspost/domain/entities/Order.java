@@ -3,6 +3,7 @@ package ru.gitpub.ruspost.domain.entities;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -31,18 +32,20 @@ public class Order implements Serializable {
     /** ID родителя. **/
     @OneToOne(cascade = ALL)
     @JoinColumn(name = "PARENTID")
+    @Nullable
     private Order parent;
 
     /** ID потомка. **/
     @OneToOne(cascade = ALL)
     @JoinColumn(name = "CHILDID")
+    @Nullable
     private Order child;
 
     /** Привязка к конкретной услуге конкретного поставщика. **/
     @OneToOne(cascade = ALL)
     @JoinColumn(name = "CONTRSERVGEOID")
     private ContrServGeo contrServGeo;
-    
+
     @OneToOne
     @JoinColumn(name = "CONTRSERVID")
     private ContrServ service;
