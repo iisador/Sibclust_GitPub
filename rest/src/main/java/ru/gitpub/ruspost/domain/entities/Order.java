@@ -42,6 +42,10 @@ public class Order implements Serializable {
     @OneToOne(cascade = ALL)
     @JoinColumn(name = "CONTRSERVGEOID")
     private ContrServGeo contrServGeo;
+    
+    @OneToOne
+    @JoinColumn(name = "CONTRSERVID")
+    private ContrServ service;
 
     /** Вес посылки. **/
     private Long weight;
@@ -53,6 +57,11 @@ public class Order implements Serializable {
     private LocalDateTime dateTo;
 
     public Order() {
+    }
+
+    public Order(ContrServGeo contrServGeo, ContrServ service) {
+        this.contrServGeo = contrServGeo;
+        this.service = service;
     }
 
     public Order(ContrServGeo contrServGeo) {

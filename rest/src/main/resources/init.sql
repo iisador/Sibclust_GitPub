@@ -15,7 +15,7 @@ create table CONTR_SERV_SUPPL (contrServId binary not null, supplementaryId bina
 create table CONTRACTOR (id binary not null, name varchar(255), primary key (id));
 create table STAT (id binary not null, assignedOverall bigint, completed bigint, cancelled bigint, clientCancelled bigint, failed bigint);
 create table GEOZONE (id binary not null, name varchar(255), primary key (id));
-create table ORDERS (id binary not null, childId binary, contrservgeoid binary, dateFrom timestamp, dateTo timestamp, parentId binary, weight bigint, primary key (id));
+create table ORDERS (id binary not null, childId binary, contrservgeoid binary, contrservid binary, dateFrom timestamp, dateTo timestamp, parentId binary, weight bigint, primary key (id));
 create table SERVICE (id binary not null, descr varchar(255), name varchar(255), serviceTypeId binary, primary key (id));
 create table SERVICE_TYPE (id binary not null, name varchar(255), primary key (id));
 create table SUPPLEMENTARY (id binary not null, name varchar(255), primary key (id));
