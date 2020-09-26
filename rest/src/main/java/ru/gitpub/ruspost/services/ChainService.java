@@ -77,9 +77,9 @@ public class ChainService {
         List<UUID> suppls = inputRequest.getSupplementaries().stream()
                 .map(UUID::fromString)
                 .collect(toList());
-        Order first = getOrder(Collections.singletonList(fromGeozone), FIRST_MILE, rates.get(inputRequest.getSpeed()), suppls);
-        Order ff = getOrder(Arrays.asList(fromGeozone, toGeozone), FF, rates.get(inputRequest.getSpeed()), Collections.emptyList());
-        Order last = getOrder(Collections.singletonList(toGeozone), LAST_MILE, rates.get(inputRequest.getSpeed()), Collections.emptyList());
+        Order first = getOrder(Collections.singletonList(fromGeozone), FIRST_MILE, rates.get(inputRequest.getSpeed()), inputRequest.getWeight(), suppls);
+        Order ff = getOrder(Arrays.asList(fromGeozone, toGeozone), FF, rates.get(inputRequest.getSpeed()), inputRequest.getWeight(), Collections.emptyList());
+        Order last = getOrder(Collections.singletonList(toGeozone), LAST_MILE, rates.get(inputRequest.getSpeed()), inputRequest.getWeight(), Collections.emptyList());
         first.setChild(ff);
         ff.setParent(first);
 
@@ -93,7 +93,7 @@ public class ChainService {
                 toResource(last)));
     }
 
-    private Order getOrder(List<UUID> geozones, UUID type, double[] rates, List<UUID> suppls) {
+    private Order getOrder(List<UUID> geozones, UUID type, double[] rates, Long weight, List<UUID> suppls) {
         Pair pair;
 
         if (suppls.isEmpty()) {
@@ -101,7 +101,8 @@ public class ChainService {
                     .addValue("geozones", geozones)
                     .addValue("mRate", rates[0])
                     .addValue("mPrice", rates[1])
-                    .addValue("mTime", rates[2]);
+                    .addValue("mTime", rates[2])
+                    .addValue("weight", weight);
             String query = "select cg.id as geozone, cserv.id as service, cg.AVGEXECTIME as time, ((c.RATING * :mRate) + (c.INDEXPRICE * :mPrice) + (c.INDEXTIME * :mTime)) as rating from CONTRACTOR c,\n" +
                            "                 CONTR_SERV_GEO cg,\n" +
                            "                 CONTR_SERV_SUPPL csup,\n" +
@@ -111,6 +112,7 @@ public class ChainService {
                            "  AND cserv.CONTRACTORID = c.ID\n" +
                            "  AND csup.CONTRSERVID = cserv.ID\n" +
                            "  AND cserv.SERVICETYPEID = :type\n" +
+                           "  AND :weight between cserv.WEIGHTMIN AND cserv.WEIGHTMAX\n" +
                            "  AND cg.GEOZONEID in(:geozones)\n" +
                            "  ORDER BY rating desc\n" +
                            "  LIMIT 1";
@@ -121,7 +123,8 @@ public class ChainService {
                     .addValue("suppls", suppls)
                     .addValue("mRate", rates[0])
                     .addValue("mPrice", rates[1])
-                    .addValue("mTime", rates[2]);
+                    .addValue("mTime", rates[2])
+                    .addValue("weight", weight);
             String query = "select cg.id as geozone, cserv.id as service, cg.AVGEXECTIME as time, ((c.RATING * :mRate) + (c.INDEXPRICE * :mPrice) + (c.INDEXTIME * :mTime)) as rating from CONTRACTOR c,\n" +
                            "                 CONTR_SERV_GEO cg,\n" +
                            "                 CONTR_SERV_SUPPL csup,\n" +
@@ -131,6 +134,7 @@ public class ChainService {
                            "  AND cserv.CONTRACTORID = c.ID\n" +
                            "  AND csup.CONTRSERVID = cserv.ID\n" +
                            "  AND cserv.SERVICETYPEID = :type\n" +
+                           "  AND :weight between cserv.WEIGHTMIN AND cserv.WEIGHTMAX\n" +
                            "  AND cg.GEOZONEID in(:geozones)\n" +
                            "  AND csup.SUPPLEMENTARYID in(:suppls)\n" +
                            "  ORDER BY rating desc\n" +

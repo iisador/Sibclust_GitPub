@@ -27,4 +27,7 @@ public class InputRequest {
 
     @ApiModelProperty(value = "Варианты доставки")
     private Integer speed;
+
+    @ApiModelProperty(value = "Вес посылки")
+    private Long weight = 100L;
 }
