@@ -8,6 +8,7 @@
           tile
           retain-focus-on-click="false"
           style="border: none"
+          @click="setSupply"
       >
         Подобрать
       </v-btn>
@@ -17,7 +18,12 @@
 
 <script>
 export default {
-  name: "Buttons"
+  name: "Buttons",
+  methods: {
+    setSupply() {
+      this.$router.push('/all').catch(()=>{})
+    }
+  }
 }
 </script>
 
