@@ -24,6 +24,8 @@ public class OrderResource {
 
     private Long time;
 
+    private Long weight;
+
     public Long getTime() {
         return time / 60 + 1;
     }

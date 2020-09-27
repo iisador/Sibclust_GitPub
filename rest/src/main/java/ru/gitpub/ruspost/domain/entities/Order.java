@@ -65,10 +65,11 @@ public class Order implements Serializable {
     public Order() {
     }
 
-    public Order(ContrServGeo contrServGeo, ContrServ service, Double rating, Long time) {
+    public Order(ContrServGeo contrServGeo, ContrServ service, Double rating, Long time, Long weight) {
         this.contrServGeo = contrServGeo;
         this.service = service;
         this.rating = rating;
         this.time = time;
+        this.weight = weight;
     }
 }

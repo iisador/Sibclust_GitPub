@@ -143,7 +143,7 @@ public class ChainService {
         }
 
         return new Order(contrServGeoRepository.findById(pair.geo).orElseThrow(RuntimeException::new),
-                contServRepository.findById(pair.service).orElseThrow(RuntimeException::new), pair.rate, pair.time);
+                contServRepository.findById(pair.service).orElseThrow(RuntimeException::new), pair.rate, pair.time, weight);
     }
 
     private OrderResource toResource(Order o) {
@@ -155,6 +155,7 @@ public class ChainService {
         r.setSum(o.getContrServGeo().getPrice());
         r.setRating(o.getRating());
         r.setTime(o.getTime());
+        r.setWeight(o.getWeight());
         return r;
     }
 
