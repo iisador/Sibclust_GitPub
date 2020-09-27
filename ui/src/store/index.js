@@ -22,7 +22,7 @@ export default new Vuex.Store({
       state.supplementary = payload
     },
     LOAD_PARAMS(state, payload) {
-      VueCookies.set('params', JSON.stringify(payload.data))
+      VueCookies.set('params', JSON.stringify(payload))
       state.params = payload
     },
   },

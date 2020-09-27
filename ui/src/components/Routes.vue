@@ -1,6 +1,6 @@
 <template>
   <div style="display: flex; flex-direction: row; align-items: baseline">
-    <div style="width: 70%; margin-right: 40px">
+    <div style="width: 60%; margin-right: 40px">
       <h1>Маршрут и исполнители подобраны</h1>
       <img src="../assets/map.png" alt="" style="width: 100%">
       <div style="display: flex; width: 100%; flex-direction: row; justify-content: space-around">
@@ -14,12 +14,12 @@
         </div>
       </div>
     </div>
-    <div>
+    <div style="width: 30%;">
       <h3>Список исполнителей</h3>
-      <v-flex v-for="param in params" :key="param.id">
+      <v-flex v-for="param in params.data.chains" :key="param.id">
         <v-card
             class="mx-auto getcard"
-            width="344"
+            width="100%"
         >
           <v-card-actions class="card-top">
             <div style="display: flex; flex-direction: column;">
@@ -42,7 +42,10 @@
 
               <div style="display: flex; flex-direction: column; padding: 15px">
                 <span>{{ param.serviceType }} {{ param.sum }} руб</span>
-                <span>Сумма: {{ param.sum }} руб</span>
+                <div style="display: flex; flex-direction: row; justify-content: space-between">
+                  <span>Сумма: {{ params.data.totalSum }} руб</span>
+                  <span>Время исполнения: {{ params.data.totalTime }} день</span>
+                </div>
               </div>
             </div>
           </v-expand-transition>
@@ -62,7 +65,7 @@ export default {
     show2: false,
     show3: false,
     show4: false,
-    params: JSON.parse(VueCookies.get("params"))
+    params: VueCookies.get("params")
   }),
   mounted() {
     console.log(this.params)
