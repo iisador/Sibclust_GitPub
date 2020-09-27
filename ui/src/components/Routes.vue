@@ -41,6 +41,7 @@
               <v-divider></v-divider>
 
               <div style="display: flex; flex-direction: column; padding: 15px">
+                <span>Вес: {{ param.weight }} кг.</span>
                 <span>{{ param.serviceType }} {{ param.sum }} руб</span>
                 <div style="display: flex; flex-direction: row; justify-content: space-between">
                   <span>Время исполнения: {{ param.time }} часов</span>
