@@ -68,7 +68,7 @@ public class RestWebConfig implements WebMvcConfigurer {
 
     /** Тут отдаем статику для фронта. **/
     @Override public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/Sibclust_GitPub/**")
+        registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:ui/");
     }
 

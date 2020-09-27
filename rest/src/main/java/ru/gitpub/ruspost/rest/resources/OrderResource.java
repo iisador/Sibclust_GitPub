@@ -23,4 +23,8 @@ public class OrderResource {
     private Double rating;
 
     private Long time;
+
+    public Long getTime() {
+        return time / 60 + 1;
+    }
 }
