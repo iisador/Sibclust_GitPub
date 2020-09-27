@@ -43,11 +43,6 @@
       Additionals,
       Buttons
     },
-    computed: {
-      getDateParam() {
-        console.log(this)
-      }
-    },
     data() {
       return {
         params: {
@@ -55,7 +50,7 @@
           fromGeozone: '',
           toGeozone: '',
           supplementaries: [],
-          speed: ''
+          speed: 1
         },
       }
     },

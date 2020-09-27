@@ -6,7 +6,6 @@
     >
       <v-list shaped style="padding: 0">
         <v-list-item-group
-            v-model="model"
             style="display: flex; flex-direction: row"
         >
           <template v-for="(item, i) in items">
@@ -49,19 +48,18 @@ export default {
   data: () => ({
     items: [
       {
-        id: 1,
+        id: 0,
         val: '1-3 дня'
       },
       {
-        id: 2,
+        id: 1,
         val: '3-10 дней'
       },
       {
-        id: 3,
+        id: 2,
         val: '10+ дней'
       },
     ],
-    model: ['Carrots'],
   }),
   methods: {
     getSelect(item) {
