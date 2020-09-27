@@ -25,6 +25,7 @@
             <div style="display: flex; flex-direction: column;">
               <h4>{{ param.geozoneId }}</h4>
               <p>Исполнитель: {{ param.name }}</p>
+              <p>Рейтинг: {{ param.rating }}</p>
               <a href="#" style="color: #1771E6; text-decoration: none">Изменить исполнителя</a>
             </div>
             <v-btn

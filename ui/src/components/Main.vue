@@ -5,14 +5,16 @@
       <span>Заполните все поля для рассчёта оптимального маршрута и подбора подходящих исполнителей</span>
       <ButtonToggle />
       <Route
-          @getDateParam='onGetDateParam'
-          @fromGeozoneId="onFromGeozoneId"
-          @toGeozoneId="onToGeozoneId"
+        @getDateParam='onGetDateParam'
+        @fromGeozoneId="onFromGeozoneId"
+        @toGeozoneId="onToGeozoneId"
       />
-      <Gabarits />
+      <Gabarits
+        @weight="onWeight"
+      />
       <Checkpoints />
       <Speed
-          @speed="onSpeed"
+        @speed="onSpeed"
       />
       <Additionals
         @supplementaries="onSupplementaries"
@@ -50,7 +52,8 @@
           fromGeozone: '',
           toGeozone: '',
           supplementaries: [],
-          speed: 1
+          speed: 1,
+          weight: ''
         },
       }
     },
@@ -80,6 +83,9 @@
       },
       onSpeed(data) {
         this.params.speed = data
+      },
+      onWeight(data) {
+        this.params.weight = data
       }
     }
   }

@@ -12,7 +12,12 @@
         <v-text-field label="Ширина" filled></v-text-field>
       </v-col>
       <v-col>
-        <v-text-field label="Вес" filled></v-text-field>
+        <v-text-field
+            label="Вес"
+            filled
+            v-model="weight"
+            @change="getWeight"
+        ></v-text-field>
       </v-col>
     </v-row>
   </v-container>
@@ -26,7 +31,13 @@ export default {
       value => !!value || 'Required.',
       value => (value && value.length >= 3) || 'Min 3 characters',
     ],
-  })
+    weight: ''
+  }),
+  methods: {
+    getWeight() {
+      this.$emit('weight', this.weight)
+    }
+  }
 }
 </script>
 
