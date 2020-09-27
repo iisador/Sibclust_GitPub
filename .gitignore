@@ -6,3 +6,5 @@ target/
 *.ipr
 *.log
 *.db
+../node_modules/
+node_modules

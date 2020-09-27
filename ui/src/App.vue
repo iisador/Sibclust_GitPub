@@ -16,6 +16,7 @@ export default {
 <style lang="scss">
 * {
   outline: none;
+  font-family: Roboto;
 }
 
 body {
