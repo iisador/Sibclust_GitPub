@@ -21,6 +21,7 @@
                 :value="item"
                 active-class="deep-purple--text text--accent-4"
                 style="border-right: 1px solid #C7C7C7 !important;"
+                @click="getSelect(item.id)"
             >
               <template v-slot:default="{ active }">
                 <v-list-item-action>
@@ -30,7 +31,7 @@
                   ></v-radio>
                 </v-list-item-action>
                 <v-list-item-content>
-                  <v-list-item-title v-text="item"></v-list-item-title>
+                  <v-list-item-title v-text="item.val"></v-list-item-title>
                 </v-list-item-content>
               </template>
             </v-list-item>
@@ -47,12 +48,26 @@ export default {
   name: "Speed",
   data: () => ({
     items: [
-      '1-3 дня',
-      '3-10 дней',
-      '10+ дней',
+      {
+        id: 1,
+        val: '1-3 дня'
+      },
+      {
+        id: 2,
+        val: '3-10 дней'
+      },
+      {
+        id: 3,
+        val: '10+ дней'
+      },
     ],
     model: ['Carrots'],
   }),
+  methods: {
+    getSelect(item) {
+      this.$emit('speed', item)
+    }
+  }
 }
 </script>
 

@@ -11,11 +11,15 @@
       />
       <Gabarits />
       <Checkpoints />
-      <Speed />
+      <Speed
+          @speed="onSpeed"
+      />
       <Additionals
         @supplementaries="onSupplementaries"
       />
-      <Buttons :setSupply="setSupply"/>
+      <Buttons
+          :setSupply="setSupply"
+      />
     </v-app>
   </div>
 </template>
@@ -28,7 +32,6 @@
   import Speed from './Speed'
   import Additionals from './Additionals'
   import Buttons from './Buttons'
-  import { mapGetters } from 'vuex';
 
   export default {
     components: {
@@ -51,19 +54,22 @@
           fromDtm: '',
           fromGeozone: '',
           toGeozone: '',
-          supplementaries: ''
+          supplementaries: [],
+          speed: ''
         },
       }
     },
     methods: {
       setSupply() {
-        // this.$router.push('/all').catch(()=>{})
+        this.$router.push('/all').catch(()=>{})
         axios
             .post('http://localhost:9000/rest/getChain', this.params)
+            .then(response => {
+              this.$store.dispatch("LOAD_PARAMS", response);
+            })
             .catch(error => {
               console.log(error.response)
             });
-        console.log(this.params)
       },
       onGetDateParam(data) {
         this.params.fromDtm = data
@@ -76,6 +82,9 @@
       },
       onSupplementaries(data) {
         this.params.supplementaries = data
+      },
+      onSpeed(data) {
+        this.params.speed = data
       }
     }
   }
