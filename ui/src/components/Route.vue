@@ -56,7 +56,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                      style="display: flex; flex-direction: row; width: 105px; justify-content: end; padding: 0;"
+                      style="display: flex; flex-direction: row; width: 105px; justify-content: end;"
                       :disabled="!enabled"
                   >
                     <v-text-field
@@ -88,7 +88,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                      style="display: flex; flex-direction: row; width: 65px; justify-content: end; padding: 0;"
+                      style="display: flex; flex-direction: row; width: 65px; justify-content: end;"
                       :disabled="!enabled"
                   >
                     <v-text-field
@@ -120,7 +120,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                      style="display: flex; flex-direction: row; width: 65px; justify-content: end; padding: 0;"
+                      style="display: flex; flex-direction: row; width: 65px; justify-content: end;"
                       :disabled="!enabled"
                   >
                     <v-text-field
@@ -176,7 +176,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                      style="display: flex; flex-direction: row; width: 105px; justify-content: end; padding: 0;"
+                      style="display: flex; flex-direction: row; width: 105px; justify-content: end;"
                       :disabled="!toEnabled"
                   >
                     <v-text-field
@@ -207,7 +207,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                      style="display: flex; flex-direction: row; width: 65px; justify-content: end; padding: 0;"
+                      style="display: flex; flex-direction: row; width: 65px; justify-content: end;"
                       :disabled="!toEnabled"
                   >
                     <v-text-field
@@ -239,7 +239,7 @@
               >
                 <template v-slot:activator="{ on, attrs }">
                   <v-btn
-                      style="display: flex; flex-direction: row; width: 65px; justify-content: end; padding: 0;"
+                      style="display: flex; flex-direction: row; width: 65px; justify-content: end;"
                       :disabled="!toEnabled"
                   >
                     <v-text-field

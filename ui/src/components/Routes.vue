@@ -5,11 +5,11 @@
       <img src="../assets/map.png" alt="" style="width: 100%">
       <div style="display: flex; width: 100%; flex-direction: row; justify-content: space-around">
         <div>
-          <h4>Дата и время забора</h4>
+          <h4 class="subtitle">Дата и время забора</h4>
           <p>15 Окт 2020</p>
         </div>
         <div>
-          <h4>Дата и время доставки</h4>
+          <h4 class="subtitle">Дата и время доставки</h4>
           <p>21 Окт 2020</p>
         </div>
       </div>
@@ -43,14 +43,14 @@
               <div style="display: flex; flex-direction: column; padding: 15px">
                 <span>{{ param.serviceType }} {{ param.sum }} руб</span>
                 <div style="display: flex; flex-direction: row; justify-content: space-between">
-                  <span>Сумма: {{ params.data.totalSum }} руб</span>
-                  <span>Время исполнения: {{ params.data.totalTime }} день</span>
+                  <span>Время исполнения: {{ param.time }} часов</span>
                 </div>
               </div>
             </div>
           </v-expand-transition>
         </v-card>
       </v-flex>
+      <span>Сумма заказа: {{ params.data.totalSum }} руб</span>
     </div>
   </div>
 </template>
@@ -67,9 +67,6 @@ export default {
     show4: false,
     params: VueCookies.get("params")
   }),
-  mounted() {
-    console.log(this.params)
-  }
 }
 </script>
 
@@ -84,5 +81,13 @@ export default {
     justify-content: space-between;
     padding: 15px;
     background-color: #F5F5F6
+  }
+
+  .subtitle {
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 12px;
+    color: #7A7A7A;
   }
 </style>
